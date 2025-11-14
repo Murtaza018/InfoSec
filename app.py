@@ -3,6 +3,46 @@ import sqlite3
 import hashlib
 import pandas as pd
 from datetime import datetime
+# ... (your other imports)
+from cryptography.fernet import Fernet
+
+# --- (Keep your existing functions: get_db_conn, log_action, etc.) ---
+
+# --- New Bonus Functions: Fernet Encryption ---
+
+def load_key():
+    """Loads the encryption key from the 'secret.key' file."""
+    try:
+        return open("secret.key", "rb").read()
+    except FileNotFoundError:
+        st.error("Encryption key 'secret.key' not found. Please run generate_key.py")
+        return None
+
+def initialize_fernet():
+    """Initializes the Fernet cipher suite."""
+    key = load_key()
+    if key:
+        return Fernet(key)
+    return None
+
+def encrypt_data(data, fernet_obj):
+    """Encrypts data (must be bytes)."""
+    if not fernet_obj:
+        return None
+    # We encode the string to bytes before encrypting
+    return fernet_obj.encrypt(data.encode())
+
+def decrypt_data(data, fernet_obj):
+    """Decrypts data (must be bytes) and returns a string."""
+    if not fernet_obj or not data:
+        return "N/A"
+    try:
+        # Decrypts the bytes and decodes them back to a string
+        return fernet_obj.decrypt(data).decode()
+    except Exception:
+        return "DECRYPTION_ERROR"
+
+# --- (Keep your existing functions: convert_df_to_csv, mask_contact) ---
 
 
 @st.cache_data
