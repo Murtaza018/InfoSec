@@ -1,9 +1,9 @@
 from cryptography.fernet import Fernet
 
-# Generate a new key
+#Generate new key
 key = Fernet.generate_key()
 
-# Save the key to a file
+#Save key to file
 with open("secret.key", "wb") as key_file:
     key_file.write(key)
 
